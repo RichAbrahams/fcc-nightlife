@@ -15,7 +15,6 @@ export function setLocation({ dispatch }) {
     if (action.type !== SEARCH_SUBMIT) {
       return next(action);
     }
-    console.log('mw', props.userName);
     const location = action.searchInput.toJS().location;
     const Ls = location;
     localStorage.setItem('location', JSON.stringify(Ls));
