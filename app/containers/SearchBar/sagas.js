@@ -1,6 +1,6 @@
 /* eslint consistent-return:0 */
 
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
 import { eventChannel, takeLatest } from 'redux-saga';
 import { fork, take, call, put, select } from 'redux-saga/effects';
 import {
@@ -17,6 +17,7 @@ import { searchSuccess, searchError, firebaseDataReceived } from './actions';
 import { signedInTrue, signOut } from 'containers/Header/actions';
 import { selectOffset, selectLocation } from './selectors';
 import yelpRequest from 'utils/yelpRequest';
+import firebase from 'firebase/app';
 
 // Search Sagas
 
