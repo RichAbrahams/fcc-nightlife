@@ -18,6 +18,8 @@ import { signedInTrue, signOut } from 'containers/Header/actions';
 import { selectOffset, selectLocation } from './selectors';
 import yelpRequest from 'utils/yelpRequest';
 import firebase from 'firebase/app';
+import auth from 'firebase/auth';
+import database from 'firebase/database';
 
 // Search Sagas
 
@@ -75,8 +77,7 @@ function initFirebase() {
   return eventChannel((emitter) => {
     firebase.initializeApp(firebaseConfig);
 
-    const dbRef = firebase
-      .database()
+    const dbRef = database()
       .ref()
       .child('bars');
 
@@ -84,8 +85,7 @@ function initFirebase() {
     const dataFailed = (err) => emitter({ type: FIREBASE_DATA_ERROR, value: err });
     dbRef.on('value', dataSuccess, dataFailed);
 
-    firebase
-      .auth()
+    auth()
       .onAuthStateChanged((user) => {
         if (user) {
           emitter({ type: FIREBASE_USER_SUCCESS, value: user });
@@ -117,8 +117,7 @@ function fireBaseAddUser(action) {
   const venue = action.data.venue;
   const user = action.data.user;
   const ref = `bars/${venue}`;
-  const dbRef = firebase
-    .database()
+  const dbRef = database()
     .ref(ref);
   dbRef.transaction((currentData) => {
     if (currentData === null) {
@@ -138,8 +137,7 @@ function fireBaseRemoveUser(action) {
   const venue = action.data.venue;
   const user = action.data.user;
   const ref = `bars/${venue}`;
-  const dbRef = firebase
-    .database()
+  const dbRef = database()
     .ref(ref);
   dbRef.transaction((currentData) => {
     if (currentData === null) {
