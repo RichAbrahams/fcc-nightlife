@@ -80,5 +80,3 @@ ReactDOM.render(
   document.getElementById('app')
 );
 
-import { install } from 'offline-plugin/runtime';
-install();

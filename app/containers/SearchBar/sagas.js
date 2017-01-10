@@ -77,7 +77,6 @@ export function* rootYelpRequestSaga() {
 
 function initFirebase() {
   return eventChannel((emitter) => {
-
     const dbRef = database()
       .ref()
       .child('bars');
