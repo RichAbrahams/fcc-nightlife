@@ -17,7 +17,6 @@ import { searchSuccess, searchError, firebaseDataReceived } from './actions';
 import { signedInTrue, signOut } from 'containers/Header/actions';
 import { selectOffset, selectLocation } from './selectors';
 import yelpRequest from 'utils/yelpRequest';
-import firebaseConfig from './firebaseConfig';
 
 // Search Sagas
 
@@ -62,6 +61,14 @@ export function* rootYelpRequestSaga() {
 }
 
 // Firebase Sagas
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyAJLi0zEa9viBHyXLcoOXm6gmj7JsALve4',
+  authDomain: 'silent-wharf-153101.firebaseapp.com',
+  databaseURL: 'https://silent-wharf-153101.firebaseio.com',
+  storageBucket: 'silent-wharf-153101.appspot.com',
+  messagingSenderId: '411725484863',
+};
 
 function initFirebase() {
   return eventChannel((emitter) => {
