@@ -7,7 +7,10 @@ import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
-
+import { rootFirebaseSaga, rootYelpRequestSaga } from 'containers/SearchBar/sagas';
+import { watchSignIn, watchSignOut } from 'containers/Header/sagas';
+import { nextScrollWindow, previousScrollWindow } from './middleware/windowScroll';
+import { setLocation } from './middleware/LocalStorageManager';
 const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(initialState = {}, history) {
@@ -17,6 +20,9 @@ export default function configureStore(initialState = {}, history) {
   const middlewares = [
     sagaMiddleware,
     routerMiddleware(history),
+    nextScrollWindow,
+    previousScrollWindow,
+    setLocation,
   ];
 
   const enhancers = [
@@ -37,6 +43,12 @@ export default function configureStore(initialState = {}, history) {
     fromJS(initialState),
     composeEnhancers(...enhancers)
   );
+
+  sagaMiddleware.run(rootFirebaseSaga);
+  sagaMiddleware.run(rootYelpRequestSaga);
+  sagaMiddleware.run(watchSignIn);
+  sagaMiddleware.run(watchSignOut);
+
 
   // Extensions
   store.runSaga = sagaMiddleware.run;

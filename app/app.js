@@ -19,15 +19,29 @@ import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
-import LanguageProvider from 'containers/LanguageProvider';
 import configureStore from './store';
-
-// Import i18n messages
-import { translationMessages } from './i18n';
+import FontFaceObserver from 'fontfaceobserver';
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
 import 'sanitize.css/sanitize.css';
+import './global-styles';
+import 'font-awesome/css/font-awesome.min.css';
+// Observe loading of Open Sans (to remove open sans, remove the <link> tag in
+// the index.html file and this observer)
+// const antonObserver = new FontFaceObserver('Anton', {});
+// // When Open Sans is loaded, add a font-family using Open Sans to the body
+// antonObserver.load().then(() => {
+//   document.body.classList.add('fontLoaded');
+// }, () => {
+//   document.body.classList.remove('fontLoaded');
+// });
 
+const Anton = new FontFaceObserver('Anton', {});
+const Lobster = new FontFaceObserver('Lobster', {});
+
+Promise.all([Anton.load(), Lobster.load()]).then(() => {
+  document.body.classList.add('fontLoaded');
+});
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
 // Optionally, this could be changed to leverage a created history
@@ -51,54 +65,20 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
+ReactDOM.render(
+  <Provider store={store}>
+    <Router
+      history={history}
+      routes={rootRoute}
+      render={
+        // Scroll to top when going to a new page, imitating default browser
+        // behaviour
+        applyRouterMiddleware(useScroll())
+      }
+    />
+  </Provider>,
+  document.getElementById('app')
+);
 
-const render = (translatedMessages) => {
-  ReactDOM.render(
-    <Provider store={store}>
-      <LanguageProvider messages={translatedMessages}>
-        <Router
-          history={history}
-          routes={rootRoute}
-          render={
-            // Scroll to top when going to a new page, imitating default browser
-            // behaviour
-            applyRouterMiddleware(useScroll())
-          }
-        />
-      </LanguageProvider>
-    </Provider>,
-    document.getElementById('app')
-  );
-};
-
-
-// Hot reloadable translation json files
-if (module.hot) {
-  // modules.hot.accept does not accept dynamic dependencies,
-  // have to be constants at compile-time
-  module.hot.accept('./i18n', () => {
-    render(translationMessages);
-  });
-}
-
-// Chunked polyfill for browsers without Intl support
-if (!window.Intl) {
-  (new Promise((resolve) => {
-    resolve(System.import('intl'));
-  }))
-    .then(() => Promise.all([
-      System.import('intl/locale-data/jsonp/de.js'),
-    ]))
-    .then(() => render(translationMessages))
-    .catch((err) => {
-      throw err;
-    });
-} else {
-  render(translationMessages);
-}
-
-// Install ServiceWorker and AppCache in the end since
-// it's not most important operation and if main code fails,
-// we do not want it installed
 import { install } from 'offline-plugin/runtime';
 install();

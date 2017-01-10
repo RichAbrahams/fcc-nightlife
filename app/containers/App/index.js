@@ -12,6 +12,9 @@
  */
 
 import React from 'react';
+import SearchBar from 'containers/SearchBar';
+import Header from 'containers/Header';
+import MainContent from './MainContent';
 
 export default class App extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -21,9 +24,11 @@ export default class App extends React.PureComponent { // eslint-disable-line re
 
   render() {
     return (
-      <div>
+      <MainContent className="main-content">
+        <Header />
+        <SearchBar />
         {React.Children.toArray(this.props.children)}
-      </div>
+      </MainContent>
     );
   }
 }
