@@ -20,6 +20,15 @@ import yelpRequest from 'utils/yelpRequest';
 import firebase from 'firebase/app';
 import auth from 'firebase/auth';
 import database from 'firebase/database';
+const firebaseConfig = {
+  apiKey: 'AIzaSyAJLi0zEa9viBHyXLcoOXm6gmj7JsALve4',
+  authDomain: 'silent-wharf-153101.firebaseapp.com',
+  databaseURL: 'https://silent-wharf-153101.firebaseio.com',
+  storageBucket: 'silent-wharf-153101.appspot.com',
+  messagingSenderId: '411725484863',
+};
+
+const app = firebase.initializeApp(firebaseConfig);
 
 // Search Sagas
 
@@ -65,17 +74,9 @@ export function* rootYelpRequestSaga() {
 
 // Firebase Sagas
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAJLi0zEa9viBHyXLcoOXm6gmj7JsALve4',
-  authDomain: 'silent-wharf-153101.firebaseapp.com',
-  databaseURL: 'https://silent-wharf-153101.firebaseio.com',
-  storageBucket: 'silent-wharf-153101.appspot.com',
-  messagingSenderId: '411725484863',
-};
 
 function initFirebase() {
   return eventChannel((emitter) => {
-    firebase.initializeApp(firebaseConfig);
 
     const dbRef = database()
       .ref()
